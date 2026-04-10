@@ -84,7 +84,6 @@ app.get("/getUserModes", async (req, res) => {
 	try {
 		const userEmail = req.query.email;
 		const userPlatform = req.query.platform;
-
 		const userID = await users.findOne({ email: userEmail }).select("_id");
 
 		if (!userID) {

@@ -16,19 +16,22 @@ paths:
         required: true
         content:
           application/json:
+            schema:
+              type: object
+              required:
+                - userEmail
+                - userPassword
+              properties:
+                userEmail:
+                  type: string
+                userPassword:
+                  type: string
             example:
-              userEmail: "test@gmail.com"
+              userEmail: "ahmed@example.com"
               userPassword: "123456"
       responses:
         200:
           description: Login success
-          content:
-            application/json:
-              example:
-                name: "Ahmed"
-                age: 20
-                profileImage: "url"
-                theme: "dark"
 
   /signUp:
     post:
@@ -37,6 +40,22 @@ paths:
         required: true
         content:
           application/json:
+            schema:
+              type: object
+              required:
+                - userEmail
+                - userPassword
+                - userName
+                - userAge
+              properties:
+                userEmail:
+                  type: string
+                userPassword:
+                  type: string
+                userName:
+                  type: string
+                userAge:
+                  type: number
             example:
               userEmail: "test@gmail.com"
               userPassword: "123456"
@@ -47,28 +66,35 @@ paths:
           description: User created
 
   /getUserModes:
-    post:
-      summary: Get modes for a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              email: "test@gmail.com"
-              platform: "mobile"
+    get:
+      summary: Get user modes by email and platform
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+
+        - name: platform
+          in: query
+          required: true
+          schema:
+            type: string
+
       responses:
         200:
           description: List of modes
 
   /getUserTasks:
-    post:
-      summary: Get tasks for a user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            example:
-              email: "test@gmail.com"
+    get:
+      summary: Get user tasks by email
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+
       responses:
         200:
           description: List of tasks
