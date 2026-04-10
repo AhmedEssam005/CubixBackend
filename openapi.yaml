@@ -1,0 +1,88 @@
+openapi: 3.0.0
+
+info:
+  title: Cubix API
+  description: Backend APIs for users, tasks, and modes
+  version: 1.0.0
+
+servers:
+  - url: https://cubixbackend-production.up.railway.app
+
+paths:
+  /login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              userEmail: "test@gmail.com"
+              userPassword: "123456"
+      responses:
+        200:
+          description: Login success
+          content:
+            application/json:
+              example:
+                name: "Ahmed"
+                age: 20
+                profileImage: "url"
+                theme: "dark"
+
+  /signUp:
+    post:
+      summary: Create new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              userEmail: "test@gmail.com"
+              userPassword: "123456"
+              userName: "Ahmed"
+              userAge: 20
+      responses:
+        200:
+          description: User created
+
+  /getUserModes:
+    post:
+      summary: Get modes for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: "test@gmail.com"
+              platform: "mobile"
+      responses:
+        200:
+          description: List of modes
+
+  /getUserTasks:
+    post:
+      summary: Get tasks for a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: "test@gmail.com"
+      responses:
+        200:
+          description: List of tasks
+
+  /getAllTasks:
+    get:
+      summary: Get all tasks
+      responses:
+        200:
+          description: Success
+
+  /getAllUsers:
+    get:
+      summary: Get all users
+      responses:
+        200:
+          description: Success
