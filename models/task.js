@@ -1,6 +1,3 @@
-const express = require("express");
-const app = express();
-app.use(express.json());
 const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema(
@@ -22,9 +19,34 @@ const taskSchema = new mongoose.Schema(
 
 		date: { type: Date, default: Date.now },
 
-		priority: {
+		duration: {
+			type: Number,
+			default: 30,
+		},
+
+		mode: {
 			type: String,
-			default: "medium",
+			enum: ["deep-work", "pomodoro", "meetings", "entertainment", "offline"],
+		},
+
+		priority: {
+			type: Number,
+			min: 1,
+			max: 5,
+			default: 3,
+		},
+
+		status: {
+			type: String,
+			enum: ["pending", "active", "completed", "cancelled"],
+			default: "pending",
+		},
+
+		progress: {
+			type: Number,
+			min: 0,
+			max: 100,
+			default: 0,
 		},
 
 		startTime: Date,
@@ -33,6 +55,14 @@ const taskSchema = new mongoose.Schema(
 		completed: { type: Boolean, default: false },
 
 		pointsEarned: { type: Number, default: 0 },
+
+		subtasks: [
+			{
+				id: String,
+				name: String,
+				completed: { type: Boolean, default: false },
+			},
+		],
 	},
 	{ timestamps: true },
 );
