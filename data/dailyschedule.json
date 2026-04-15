@@ -1,0 +1,109 @@
+{
+    "date": "2026-04-09",
+    "optimizedTasks": [
+        {
+            "id": "task-5",
+            "name": "Work on feature X",
+            "description": "Implement user authentication system",
+            "duration": 120,
+            "mode": "pomodoro",
+            "priority": 5,
+            "status": "active",
+            "order": 1,
+            "startTime": "08:00:00",
+            "reasonForOrder": "Highest priority, pomodoro mode at start of day"
+        },
+        {
+            "id": "task-2",
+            "name": "Team standup meeting",
+            "description": "Daily standup with the development team",
+            "duration": 15,
+            "mode": "meetings",
+            "priority": 4,
+            "status": "pending",
+            "order": 2,
+            "startTime": "10:00:00",
+            "reasonForOrder": "Meetings break up deep work sessions"
+        },
+        {
+            "id": "task-1",
+            "name": "Review project proposal",
+            "description": "Go through the Q2 project proposal document",
+            "duration": 45,
+            "mode": "deep-work",
+            "priority": 5,
+            "status": "pending",
+            "order": 3,
+            "startTime": "10:15:00",
+            "reasonForOrder": "High priority deep work after meeting"
+        },
+        {
+            "id": "task-4",
+            "name": "Coffee break & social media",
+            "description": "Relax and catch up on social media",
+            "duration": 15,
+            "mode": "entertainment",
+            "priority": 2,
+            "status": "pending",
+            "order": 4,
+            "startTime": "11:00:00",
+            "reasonForOrder": "Entertainment break after deep work"
+        },
+        {
+            "id": "task-3",
+            "name": "Code review",
+            "description": "Review pull requests from team members",
+            "duration": 30,
+            "mode": "deep-work",
+            "priority": 3,
+            "status": "pending",
+            "order": 5,
+            "startTime": "11:15:00",
+            "reasonForOrder": "Medium priority, good for mid-day focus"
+        },
+        {
+            "id": "task-6",
+            "name": "Email & communications",
+            "description": "Respond to emails and messages",
+            "duration": 20,
+            "mode": "offline",
+            "priority": 2,
+            "status": "pending",
+            "order": 6,
+            "startTime": "11:45:00",
+            "reasonForOrder": "Lower priority communication task"
+        },
+        {
+            "id": "task-7",
+            "name": "Lunch break",
+            "description": "Take a lunch break and recharge",
+            "duration": 60,
+            "mode": "entertainment",
+            "priority": 3,
+            "status": "pending",
+            "order": 7,
+            "startTime": "12:05:00",
+            "reasonForOrder": "Essential break for recharge"
+        },
+        {
+            "id": "task-8",
+            "name": "Client call",
+            "description": "Discuss project timeline with client",
+            "duration": 30,
+            "mode": "meetings",
+            "priority": 4,
+            "status": "pending",
+            "order": 8,
+            "startTime": "13:05:00",
+            "reasonForOrder": "High priority meeting in afternoon"
+        }
+    ],
+    "totalDuration": 335,
+    "workModeBreakdown": {
+        "pomodoro": 120,
+        "deep-work": 75,
+        "meetings": 45,
+        "entertainment": 75,
+        "offline": 20
+    }
+}
