@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   title: Cubix API
-  description: Backend APIs for users, tasks, and modes
+  description: Backend APIs for Users, Modes, and Tasks
   version: 1.0.0
 
 servers:
@@ -10,6 +10,7 @@ servers:
 
 paths:
   # ================= AUTH =================
+
   /auth/login:
     post:
       summary: User login
@@ -19,9 +20,7 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - userEmail
-                - userPassword
+              required: [userEmail, userPassword]
               properties:
                 userEmail:
                   type: string
@@ -40,11 +39,7 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - userEmail
-                - userPassword
-                - userName
-                - userAge
+              required: [userEmail, userPassword, userName, userAge]
               properties:
                 userEmail:
                   type: string
@@ -59,6 +54,7 @@ paths:
           description: User created
 
   # ================= USERS =================
+
   /users/getUserProfile/{userId}:
     get:
       summary: Get user profile
@@ -81,14 +77,30 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                age:
+                  type: number
+                profileImage:
+                  type: string
+                theme:
+                  type: string
       responses:
         200:
           description: Updated
 
   # ================= MODES =================
+
   /modes/getUserModes:
     get:
-      summary: Get user modes by email and platform
+      summary: Get user modes by email + platform
       parameters:
         - name: email
           in: query
@@ -102,13 +114,47 @@ paths:
             type: string
       responses:
         200:
-          description: List of modes
+          description: Modes list
 
   /modes/createMode:
     post:
       summary: Create mode
       requestBody:
         required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, platform, name]
+              properties:
+                userId:
+                  type: string
+                platform:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                cubeFace:
+                  type: number
+                color:
+                  type: string
+                icon:
+                  type: string
+                energyLevel:
+                  type: string
+                focusRequired:
+                  type: boolean
+                category:
+                  type: string
+                blockedApps:
+                  type: array
+                  items:
+                    type: string
+                blockedWebsites:
+                  type: array
+                  items:
+                    type: string
       responses:
         201:
           description: Mode created
@@ -122,16 +168,48 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                color:
+                  type: string
+                icon:
+                  type: string
+                energyLevel:
+                  type: string
+                focusRequired:
+                  type: boolean
+                category:
+                  type: string
+                blockedApps:
+                  type: array
+                  items:
+                    type: string
+                blockedWebsites:
+                  type: array
+                  items:
+                    type: string
+                cubeFace:
+                  type: number
       responses:
         200:
-          description: Updated
+          description: Mode updated
 
   # ================= TASKS =================
+
   /tasks/getUserTasks:
     get:
       summary: Get user tasks by email
       parameters:
-        - name: email
+        - name: userEmail
           in: query
           required: true
           schema:
@@ -143,6 +221,41 @@ paths:
   /tasks/createTask:
     post:
       summary: Create task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, modeId, name]
+              properties:
+                userId:
+                  type: string
+                modeId:
+                  type: string
+                name:
+                  type: string
+                description:
+                  type: string
+                duration:
+                  type: number
+                priority:
+                  type: number
+                startTime:
+                  type: string
+                endTime:
+                  type: string
+                subtasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      completed:
+                        type: boolean
       responses:
         201:
           description: Task created
@@ -158,7 +271,7 @@ paths:
             type: string
       responses:
         200:
-          description: Updated
+          description: Task updated
 
   /tasks/deleteTask/{taskId}:
     delete:
@@ -171,9 +284,9 @@ paths:
             type: string
       responses:
         200:
-          description: Deleted
+          description: Task deleted
 
-  /tasks/completeTask/{taskId}: 
+  /tasks/completeTask/{taskId}:
     put:
       summary: Complete task
       parameters:
@@ -182,6 +295,15 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pointsEarned:
+                  type: number
       responses:
         200:
-          description: Completed
+          description: Task completed
