@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const users = require("../models/user");
-const { validateLoginInput, validateSignUpInput } = require("../utils/validators");
+const {
+	validateLoginInput,
+	validateSignUpInput,
+} = require("../utils/validators");
 
 const login = async (req, res, next) => {
 	try {
@@ -40,7 +43,12 @@ const signUp = async (req, res, next) => {
 		const { userEmail, userPassword, userName, userAge } = req.body;
 
 		// Validate input
-		const validation = validateSignUpInput(userEmail, userPassword, userName, userAge);
+		const validation = validateSignUpInput(
+			userEmail,
+			userPassword,
+			userName,
+			userAge,
+		);
 		if (!validation.valid) {
 			return res.status(400).json({ message: validation.message });
 		}

@@ -3,9 +3,9 @@ const router = express.Router();
 const { getUserProfile, updateUserProfile } = require("../controllers/userController");
 
 // GET /users/:userId
-router.get("/:userId", getUserProfile);
+router.get("/getUserProfile/:userId", getUserProfile);
 
 // PUT /users/:userId
-router.put("/:userId", updateUserProfile);
+router.put("/updateUserProfile/:userId", updateUserProfile);
 
 module.exports = router;

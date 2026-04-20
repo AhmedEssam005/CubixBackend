@@ -1,17 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { getUserModes, createMode, updateMode, deleteMode } = require("../controllers/modeController");
+const {
+	getUserModes,
+	createMode,
+	updateMode,
+} = require("../controllers/modeController");
 
 // GET /modes - Get user modes by email and platform
-router.get("/", getUserModes);
+router.get("/getUserModes", getUserModes);
 
 // POST /modes - Create new mode
-router.post("/", createMode);
+router.post("/createMode", createMode);
 
 // PUT /modes/:modeId - Update mode
-router.put("/:modeId", updateMode);
-
-// DELETE /modes/:modeId - Delete mode
-router.delete("/:modeId", deleteMode);
+router.put("/updateMode/:modeId", updateMode);
 
 module.exports = router;

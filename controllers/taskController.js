@@ -1,15 +1,23 @@
 const tasks = require("../models/task");
+const users = require("../models/user");
+const modes = require("../models/modes");
 
-const getTasks = async (req, res, next) => {
+const getUserTasks = async (req, res, next) => {
 	try {
-		const { userId, modeId } = req.query;
+		const { userEmail } = req.query;
+		if (!userEmail) {
+			return res.status(400).json({ message: "User email is required" });
+		}
 
-		const filter = {};
-		if (userId) filter.userId = userId;
-		if (modeId) filter.modeId = modeId;
-
-		const allTasks = await tasks.find(filter).populate("userId", "name email");
-
+		const userID = await users.findOne({ email: userEmail }).select("_id");
+		if (!userID) {
+			return res.status(404).json({ message: "User not found" });
+		}
+		const allTasks = await tasks
+			.find({ userId: userID._id })
+			.populate("modeId")
+			.populate("userId", "name")
+			.sort({ date: -1 });
 		res.json(allTasks);
 	} catch (error) {
 		next(error);
@@ -18,10 +26,22 @@ const getTasks = async (req, res, next) => {
 
 const createTask = async (req, res, next) => {
 	try {
-		const { userId, modeId, name, description, duration, mode, priority, startTime, endTime, subtasks } = req.body;
+		const {
+			userId,
+			modeId,
+			name,
+			description,
+			duration,
+			priority,
+			startTime,
+			endTime,
+			subtasks,
+		} = req.body;
 
-		if (!userId || !name) {
-			return res.status(400).json({ message: "UserId and name are required" });
+		if (!userId || !modeId || !name) {
+			return res.status(400).json({
+				message: "userId, modeId and name are required",
+			});
 		}
 
 		const newTask = await tasks.create({
@@ -30,14 +50,9 @@ const createTask = async (req, res, next) => {
 			name,
 			description,
 			duration: duration || 30,
-			mode: mode || "pomodoro",
 			priority: priority || 3,
-			status: "pending",
-			progress: 0,
 			startTime,
 			endTime,
-			completed: false,
-			pointsEarned: 0,
 			subtasks: subtasks || [],
 		});
 
@@ -50,13 +65,25 @@ const createTask = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
 	try {
 		const { taskId } = req.params;
-		const { name, description, duration, mode, priority, startTime, endTime, status, progress, completed, pointsEarned, subtasks } = req.body;
+		const {
+			name,
+			description,
+			duration,
+			mode,
+			priority,
+			startTime,
+			endTime,
+			status,
+			progress,
+			completed,
+			pointsEarned,
+			subtasks,
+		} = req.body;
 
 		const updateData = {};
 		if (name) updateData.name = name;
 		if (description) updateData.description = description;
 		if (duration) updateData.duration = duration;
-		if (mode) updateData.mode = mode;
 		if (priority) updateData.priority = priority;
 		if (startTime) updateData.startTime = startTime;
 		if (endTime) updateData.endTime = endTime;
@@ -88,7 +115,6 @@ const deleteTask = async (req, res, next) => {
 		if (!deletedTask) {
 			return res.status(404).json({ message: "Task not found" });
 		}
-
 		res.json({ message: "Task deleted successfully" });
 	} catch (error) {
 		next(error);
@@ -106,13 +132,13 @@ const completeTask = async (req, res, next) => {
 				completed: true,
 				pointsEarned: pointsEarned || 10,
 			},
-			{ new: true }
+			{ new: true },
 		);
 
 		if (!updatedTask) {
 			return res.status(404).json({ message: "Task not found" });
 		}
-
+		
 		res.json(updatedTask);
 	} catch (error) {
 		next(error);
@@ -120,7 +146,7 @@ const completeTask = async (req, res, next) => {
 };
 
 module.exports = {
-	getTasks,
+	getUserTasks,
 	createTask,
 	updateTask,
 	deleteTask,

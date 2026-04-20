@@ -9,7 +9,8 @@ servers:
   - url: https://cubixbackend-production.up.railway.app
 
 paths:
-  /login:
+  # ================= AUTH =================
+  /auth/login:
     post:
       summary: User login
       requestBody:
@@ -26,14 +27,11 @@ paths:
                   type: string
                 userPassword:
                   type: string
-            example:
-              userEmail: "ahmed@example.com"
-              userPassword: "123456"
       responses:
         200:
           description: Login success
 
-  /signUp:
+  /auth/signUp:
     post:
       summary: Create new user
       requestBody:
@@ -56,16 +54,39 @@ paths:
                   type: string
                 userAge:
                   type: number
-            example:
-              userEmail: "test@gmail.com"
-              userPassword: "123456"
-              userName: "Ahmed"
-              userAge: 20
       responses:
-        200:
+        201:
           description: User created
 
-  /getUserModes:
+  # ================= USERS =================
+  /users/getUserProfile/{userId}:
+    get:
+      summary: Get user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+
+  /users/updateUserProfile/{userId}:
+    put:
+      summary: Update user profile
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Updated
+
+  # ================= MODES =================
+  /modes/getUserModes:
     get:
       summary: Get user modes by email and platform
       parameters:
@@ -74,18 +95,39 @@ paths:
           required: true
           schema:
             type: string
-
         - name: platform
           in: query
           required: true
           schema:
             type: string
-
       responses:
         200:
           description: List of modes
 
-  /getUserTasks:
+  /modes/createMode:
+    post:
+      summary: Create mode
+      requestBody:
+        required: true
+      responses:
+        201:
+          description: Mode created
+
+  /modes/updateMode/{modeId}:
+    put:
+      summary: Update mode
+      parameters:
+        - name: modeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Updated
+
+  # ================= TASKS =================
+  /tasks/getUserTasks:
     get:
       summary: Get user tasks by email
       parameters:
@@ -94,21 +136,52 @@ paths:
           required: true
           schema:
             type: string
-
       responses:
         200:
-          description: List of tasks
+          description: Tasks list
 
-  /getAllTasks:
-    get:
-      summary: Get all tasks
+  /tasks/createTask:
+    post:
+      summary: Create task
+      responses:
+        201:
+          description: Task created
+
+  /tasks/updateTask/{taskId}:
+    put:
+      summary: Update task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
-          description: Success
+          description: Updated
 
-  /getAllUsers:
-    get:
-      summary: Get all users
+  /tasks/deleteTask/{taskId}:
+    delete:
+      summary: Delete task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
-          description: Success
+          description: Deleted
+
+  /tasks/completeTask/{taskId}: 
+    put:
+      summary: Complete task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Completed

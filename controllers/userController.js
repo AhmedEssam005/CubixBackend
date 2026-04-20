@@ -3,7 +3,9 @@ const users = require("../models/user");
 const getUserProfile = async (req, res, next) => {
 	try {
 		const { userId } = req.params;
-
+		if (!userId) {
+			return res.status(400).json({ message: "UserId required" });
+		}
 		const user = await users.findById(userId).select("-password");
 		if (!user) {
 			return res.status(404).json({ message: "User not found" });
@@ -26,9 +28,11 @@ const updateUserProfile = async (req, res, next) => {
 		if (profileImage) updateData.profileImage = profileImage;
 		if (theme) updateData.theme = theme;
 
-		const updatedUser = await users.findByIdAndUpdate(userId, updateData, {
-			new: true,
-		}).select("-password");
+		const updatedUser = await users
+			.findByIdAndUpdate(userId, updateData, {
+				new: true,
+			})
+			.select("-password");
 
 		if (!updatedUser) {
 			return res.status(404).json({ message: "User not found" });

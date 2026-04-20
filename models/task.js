@@ -24,11 +24,6 @@ const taskSchema = new mongoose.Schema(
 			default: 30,
 		},
 
-		mode: {
-			type: String,
-			enum: ["deep-work", "pomodoro", "meetings", "entertainment", "offline"],
-		},
-
 		priority: {
 			type: Number,
 			min: 1,

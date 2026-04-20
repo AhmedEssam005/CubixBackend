@@ -7,7 +7,11 @@ app.use(express.json());
 
 // Database Connection
 const connectDB = require("./config/database");
-connectDB();
+connectDB().then(() => {
+	app.listen(process.env.PORT || 5000, () => {
+		console.log("Server running");
+	});
+});
 
 // Swagger Documentation
 const swaggerUi = require("swagger-ui-express");
@@ -34,8 +38,3 @@ app.get("/", (req, res) => {
 // Error Handler Middleware
 const errorHandler = require("./middleware/errorHandler");
 app.use(errorHandler);
-
-// Start Server
-app.listen(process.env.PORT || 5000, () => {
-	console.log(`Server running on port ${process.env.PORT || 5000}`);
-});
