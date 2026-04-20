@@ -3,94 +3,121 @@
 ---
 
 ## ⚙️ Tech Stack
-* **Database:** MongoDB
-* **ODM:** Mongoose
-* **Environment:** Node.js + Express.js
-* **API Documentation:** [Swagger UI / API Docs](https://cubixbackend-production.up.railway.app/docs)
+- **Database:** MongoDB
+- **ODM:** Mongoose
+- **Backend:** Node.js + Express.js
+- **API Documentation:** https://cubixbackend-production.up.railway.app/docs
 
 ---
 
-## 🏗️ Data Models
+## 🏗️ Data Models Overview
 
-### 👤 Users Collection
-The core collection for managing identity and personalization.
+Cubix is built around three main collections:
 
-```javascript
+- 👤 Users
+- 🎯 Modes
+- 📝 Tasks
+
+They are linked using MongoDB references (`ObjectId`).
+
+---
+
+# 👤 Users Collection
+
+Stores authentication and profile data.
+
+```js
 {
   name: { type: String, required: true },
   age: { type: Number, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }, // Bcrypt hashed
+  password: { type: String, required: true }, // bcrypt hashed
   profileImage: { type: String },
   theme: { type: String, default: "light" },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
-**📌 Key Details:**
-* **Security:** Passwords must be hashed using `bcrypt` before persistence.
-* **Identifier:** The `email` field is indexed and used as the primary lookup for authentication.
 
 ---
 
-### 🎯 Modes Collection
-Configurations that define how a user interacts with different platforms.
+# 🎯 Modes Collection
 
-```javascript
+Defines working modes for each user per platform.
+
+```js
 {
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  platform: { type: String },
+  userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
+  platform: { type: String, required: true },
   name: { type: String, required: true },
-  cubeFace: { type: Number, min: 1, max: 6 },
-  blockedList: [{ type: String }],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  description: String,
+  cubeFace: { type: Number, min: 1, max: 5 },
+  color: { type: String, default: "#6366f1" },
+  icon: String,
+  energyLevel: {
+    type: String,
+    enum: ["low", "medium", "high", "very-high"]
+  },
+  focusRequired: { type: Boolean, default: false },
+  category: {
+    type: String,
+    enum: ["work", "break", "communication", "learning"]
+  },
+  blockedApps: { type: [String], default: [] },
+  blockedWebsites: { type: [String], default: [] },
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
-**📌 Key Details:**
-* **Relationship:** One-to-Many (`User` ⮕ `Modes`).
-* **Functionality:** Stores platform-specific restrictions (via `blockedList`) and physical hardware mapping (`cubeFace`).
 
 ---
 
-### 📝 Tasks Collection
-Stores actionable items, scheduling data, and gamification metrics.
+# 📝 Tasks Collection
 
-```javascript
+Stores user tasks linked to modes.
+
+```js
 {
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
   modeId: { type: Schema.Types.ObjectId, ref: "Mode", required: true },
   name: { type: String, required: true },
-  description: { type: String },
-  date: { type: Date },
-  priority: { type: String, enum: ["low", "medium", "high"], default: "medium" },
-  startTime: { type: Date },
-  endTime: { type: Date },
+  description: String,
+  date: { type: Date, default: Date.now },
+  duration: { type: Number, default: 30 },
+  priority: { type: Number, min: 1, max: 5, default: 3 },
+  status: {
+    type: String,
+    enum: ["pending", "active", "completed", "cancelled"],
+    default: "pending"
+  },
+  progress: { type: Number, min: 0, max: 100, default: 0 },
+  startTime: Date,
+  endTime: Date,
   completed: { type: Boolean, default: false },
   pointsEarned: { type: Number, default: 0 },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  subtasks: [
+    {
+      id: String,
+      name: String,
+      completed: { type: Boolean, default: false }
+    }
+  ],
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
-**📌 Key Details:**
-* **Contextual Linking:** Every task is tied to both a `User` and a specific `Mode`.
-* **Gamification:** The `pointsEarned` field tracks user progression upon task completion.
 
 ---
 
-## 🔗 Entity Relationship Summary
+# 🔗 Relationships
 
-
-
-| Collection | Parent | Relationship Type |
-| :--- | :--- | :--- |
-| **Users** | — | Root Collection |
-| **Modes** | Users | One-to-Many (1 User : N Modes) |
-| **Tasks** | Users & Modes | Many-to-One (N Tasks : 1 Mode) |
+| Collection | Relationship | Type |
+|------------|-------------|------|
+| Users → Modes | One-to-Many | 1:N |
+| Users → Tasks | One-to-Many | 1:N |
+| Modes → Tasks | One-to-Many | 1:N |
 
 ---
 
-## 🚀 Testing & Deployment
-The production database is accessible via the Cubix API Gateway. For integration testing and endpoint validation, refer to the live documentation:
-
-👉 **[Live API Documentation](https://cubixbackend-production.up.railway.app/docs)**
+# 🚀 API Documentation
+https://cubixbackend-production.up.railway.app/docs
