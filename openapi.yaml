@@ -243,8 +243,10 @@ paths:
                   type: number
                 startTime:
                   type: string
+                  format: date-time
                 endTime:
                   type: string
+                  format: date-time
                 subtasks:
                   type: array
                   items:
@@ -269,6 +271,35 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                duration:
+                  type: number
+                priority:
+                  type: number
+                startTime:
+                  type: string
+                  format: date-time
+                endTime:
+                  type: string
+                  format: date-time
+                status:
+                  type: string
+                progress:
+                  type: number
+                completed:
+                  type: boolean
+                pointsEarned:
+                  type: number
       responses:
         200:
           description: Task updated
@@ -307,3 +338,105 @@ paths:
       responses:
         200:
           description: Task completed
+
+  # --- NEW TASK ENDPOINTS ---
+
+  /tasks/startTask/{taskId}:
+    put:
+      summary: Start an active session for a task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Task started successfully
+
+  /tasks/pauseTask/{taskId}:
+    put:
+      summary: Pause an active session for a task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Task paused successfully
+
+  /tasks/summary:
+    get:
+      summary: Get top-level dashboard summary stats for a user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns totalPoints, efficiency, and completedTasks
+
+  /tasks/heatmap:
+    get:
+      summary: Get task completion heatmap data for a user
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns an array of dates and completion counts
+
+  /tasks/timeline:
+    get:
+      summary: Get tasks for a specific date timeline
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          required: false
+          description: Optional. Defaults to today if not provided (YYYY-MM-DD)
+          schema:
+            type: string
+            format: date
+      responses:
+        200:
+          description: Returns chronologically sorted tasks for the timeline view
+
+  /tasks/{taskId}/subtasks/{subtaskId}:
+    put:
+      summary: Toggle completion status of a specific subtask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: subtaskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [completed]
+              properties:
+                completed:
+                  type: boolean
+      responses:
+        200:
+          description: Subtask boolean toggled successfully

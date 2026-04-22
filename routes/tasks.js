@@ -6,21 +6,39 @@ const {
 	updateTask,
 	deleteTask,
 	completeTask,
+	startTask,
+	pauseTask,
+	getSummaryStats,
+	getHeatmap,
+	toggleSubtask,
+	getTimeline,
 } = require("../controllers/taskController");
 
-// GET /tasks - Get all or filtered tasks
 router.get("/getUserTasks", getUserTasks);
 
-// POST /tasks - Create new task
 router.post("/createTask", createTask);
 
-// PUT /tasks/:taskId/complete - Mark task as complete
 router.put("/completeTask/:taskId", completeTask);
 
-// PUT /tasks/:taskId - Update task
 router.put("/updateTask/:taskId", updateTask);
 
-// DELETE /tasks/:taskId - Delete task
 router.delete("/deleteTask/:taskId", deleteTask);
+
+// PUT /tasks/startTask/:taskId - Start a task
+router.put("/startTask/:taskId", startTask);
+
+// PUT /tasks/pauseTask/:taskId - Pause a task
+router.put("/pauseTask/:taskId", pauseTask);
+
+// GET /tasks/summary - Get summary stats for a user
+router.get("/summary", getSummaryStats);    
+
+// GET /tasks/heatmap - Get heatmap data for a user
+router.get("/heatmap", getHeatmap);
+
+// PUT /tasks/:taskId/subtasks/:subtaskId - Toggle subtask completion
+router.put("/:taskId/subtasks/:subtaskId", toggleSubtask);
+
+router.get("/timeline", getTimeline);
 
 module.exports = router;
