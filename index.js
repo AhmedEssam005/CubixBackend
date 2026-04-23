@@ -4,6 +4,12 @@ require("dotenv").config();
 
 // Middleware
 app.use(express.json());
+const cors = require('cors');
+
+// This allows every domain to access your routes
+app.use(cors({
+  origin: '*'
+}));
 
 // Database Connection
 const connectDB = require("./config/database");
