@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require("http");
 const app = express();
 require("dotenv").config();
 
@@ -11,11 +12,16 @@ app.use(cors({
   origin: '*'
 }));
 
+const httpServer = http.createServer(app);
+
+const initSocket = require("./socket/socketManager");
+initSocket(httpServer);
+
 // Database Connection
 const connectDB = require("./config/database");
 connectDB().then(() => {
-	app.listen(process.env.PORT || 5000, () => {
-		console.log("Server running");
+	httpServer.listen(process.env.PORT || 5000, () => {
+		console.log("Server + Socket.IO running");
 	});
 });
 
