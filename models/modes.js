@@ -60,6 +60,21 @@ const modeSchema = new mongoose.Schema(
 			type: [String],
 			default: [],
 		},
+
+		allowedApps: {
+			type: [String],
+			default: [],
+		},
+
+		allowedWebsites: {
+			type: [String],
+			default: [],
+		},
+
+		muteNotifications: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true },
 );
