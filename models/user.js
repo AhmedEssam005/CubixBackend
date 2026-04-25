@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema(
 		password: { type: String, required: true },
 		profileImage: { type: String },
 		theme: { type: String, required: true, default: "light" },
+		mobileModes: {
+			type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Mode" }],
+			default: null,
+		},
+		desktopModes: {
+			type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Mode" }],
+			default: null,
+		},
 	},
 	{ timestamps: true },
 );

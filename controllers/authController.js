@@ -59,6 +59,7 @@ const signUp = async (req, res, next) => {
 		}
 
 		const hashedPassword = await bcrypt.hash(userPassword, 10);
+		const { seedInitialModes } = require("./modeController");
 
 		const newUser = await users.create({
 			email: userEmail,
@@ -66,7 +67,13 @@ const signUp = async (req, res, next) => {
 			name: userName,
 			age: userAge,
 			theme: "light",
+			mobileModes: null,
+			desktopModes: null,
 		});
+
+		// Seed modes for both platforms immediately
+		await seedInitialModes(newUser._id, "mobile");
+		await seedInitialModes(newUser._id, "desktop");
 
 		res.status(201).json({
 			message: "Account created successfully",
