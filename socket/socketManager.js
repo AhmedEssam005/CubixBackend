@@ -90,6 +90,30 @@ module.exports = function initSocket(httpServer) {
       socket.to(`user:${userId}`).emit('ble_status_changed', { owner: owner ?? null });
     });
 
+    socket.on('task_face_locked', ({ userId, platform, modeName }) => {
+      if (!userId) return;
+      console.log(`[Socket] ${platform} locked task face to "${modeName}" for user ${userId}`);
+      socket.to(`user:${userId}`).emit('task_face_locked', { lockedBy: platform, modeName });
+    });
+
+    socket.on('task_face_unlocked', ({ userId, platform }) => {
+      if (!userId) return;
+      console.log(`[Socket] ${platform} unlocked task face for user ${userId}`);
+      socket.to(`user:${userId}`).emit('task_face_unlocked', { unlockedBy: platform });
+    });
+
+    socket.on('session_paused', ({ userId, platform, modeName }) => {
+      if (!userId) return;
+      console.log(`[Socket] ${platform} paused session for user ${userId}`);
+      socket.to(`user:${userId}`).emit('session_paused', { pausedBy: platform, modeName });
+    });
+
+    socket.on('session_resumed', ({ userId, platform }) => {
+      if (!userId) return;
+      console.log(`[Socket] ${platform} resumed session for user ${userId}`);
+      socket.to(`user:${userId}`).emit('session_resumed', { resumedBy: platform });
+    });
+
     socket.on('disconnect', () => {
       console.log(`[Socket] disconnected: ${socket.id} (${socket.data.platform ?? 'unknown'})`);
 
